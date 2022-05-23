@@ -1,0 +1,145 @@
+namespace Task_42
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Player player = new Player();
+            Deck deck = new Deck();
+            string userInput;
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.WriteLine("В калоде 16 карт, выбирите действие:" +
+                    " \n1. Взять карту\n2. Перемешать колоду.\n3. Показать колоду.\n4. Выход");
+
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        player.GetCard(deck);
+                        break;
+                    case "2":
+                        deck.Shuffle();
+                        break;
+                    case "3":
+                        deck.ShowDeck();
+                        break;
+                    case "4":
+                        Console.WriteLine("Спасибо что былис нами!");
+                        isWork = false;
+                        break;
+                    default:
+                        Console.WriteLine("Некоректный ввод");
+                        break;
+                }
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Card
+    {
+        public string Suit { get; private set; }
+        public string Value { get; private set; }
+
+        public Card(string suit, string value)
+        {
+            Suit = suit;
+            Value = value;
+        }
+    }
+
+    class Deck
+    {
+        private List<Card> _cards = new List<Card>();
+        private Random _random = new Random();
+
+        public Deck()
+        {
+            _cards.Add(new Card("Heart", "Ace"));
+            _cards.Add(new Card("Heart", "King"));
+            _cards.Add(new Card("Heart", "Queen"));
+            _cards.Add(new Card("Heart", "Jack"));
+            _cards.Add(new Card("Dimound", "Ace"));
+            _cards.Add(new Card("Dimound", "King"));
+            _cards.Add(new Card("Dimound", "Queen"));
+            _cards.Add(new Card("Dimound", "Jack"));
+            _cards.Add(new Card("Club", "Ace"));
+            _cards.Add(new Card("Club", "King"));
+            _cards.Add(new Card("Club", "Queen"));
+            _cards.Add(new Card("Club", "Jack"));
+            _cards.Add(new Card("Spade", "Ace"));
+            _cards.Add(new Card("Spade", "King"));
+            _cards.Add(new Card("Spade", "Queen"));
+            _cards.Add(new Card("Spade", "Jack"));
+        }
+        public bool TryGetCard(out Card card)
+        {
+            if (_cards.Count > 0)
+            {
+                card = _cards[GetNumberCard()];
+                _cards.Remove(card);
+                return true;
+            }
+            else
+            {
+                card = null;
+                return false;
+            }
+        }
+        public void Shuffle()
+        {
+            for (int i = _cards.Count - 1; i >= 1; i--)
+            {
+                int j = _random.Next(i + 1);
+
+                Card tmp = _cards[j];
+                _cards[j] = _cards[i];
+                _cards[i] = tmp;
+            }
+            Console.WriteLine("Колода перемешена. Для продолжения нажмите любую клавишу.");
+        }
+        private int GetNumberCard()
+        {
+            int numberCard = 0;
+            return numberCard;
+        }
+        public void ShowDeck()
+        {
+            for (int i = 0; i < _cards.Count; i++)
+            {
+                Console.WriteLine($"{_cards[i].Suit} {_cards[i].Value}");
+            }
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _hand = new List<Card>();
+
+        public void GetCard(Deck deck)
+        {
+            if (deck.TryGetCard(out Card card))
+            {
+                _hand.Add(card);
+                Console.WriteLine("Ваши карты:");
+                ShowCard();
+            }
+            else
+            {
+                Console.WriteLine("В колоде законились карты!");
+            }
+        }
+        public void ShowCard()
+        {
+            for (int i = 0; i < _hand.Count; i++)
+            {
+                Console.WriteLine($"{_hand[i].Suit} {_hand[i].Value}");
+            }
+        }
+    }
+}
